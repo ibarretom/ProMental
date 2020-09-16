@@ -1,7 +1,7 @@
 <template> 
     <v-container class=" align-content-space-between "  fill-height fluid >
         <tool-bar backTo='/home' color='white' 
-            :progressVal="progress" 
+            :progressVal="progressPrint" 
             :icon='arrowLeft' 
             :flat="true"/>
 
@@ -85,6 +85,7 @@ export default {
         askIndex: questionsBank.questionary.askIndex,
 
         progress: 0,
+        progressPrint: 0,
         lastQuestion: questionsBank.lastQuestion,
         cutScore: 7,
         burnoutCutScore: 29,
@@ -151,15 +152,18 @@ export default {
                     this.indexQuestionary++;
                     this.progress = 100 - (13*this.addProgress);
                     this.askIndex = 0;
+                
                 }else if(this.user.isWorking === this.negative){
                     this.progress = 100 - (4*this.addProgress);
                     this.indexQuestionary++;
                     this.askIndex = 0;
+                    
                 }
             }else{
                 this.progress += this.addProgress;
             }
             
+            this.progressPrint = this.progress.toFixed()
             console.log('Depois:', 'Progress:', this.progress, 'Cut Score:', this.cutScore);
             
         },//answareQuestion function end
