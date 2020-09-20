@@ -5,8 +5,7 @@
             :flat='true'
             :backTo='homeRouter' 
             color='white' 
-            icon='mdi-arrow-left' 
-            />
+            icon='mdi-arrow-left' />
         <v-container class="px-auto py-0" fluid>
             <v-row>
                 <v-col class=" pa-0" cols="12">

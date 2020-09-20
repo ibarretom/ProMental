@@ -34,20 +34,6 @@ export default {
 //   components: { ProgressBar },
 
     data: () => ({
-      absolute: false,
-      active: true,
-      opacity: 0.3,
-      bottom: false,
-      buffer: 100,
-      fixed: false,
-      height: 24,
-      indeterminate: false,
-      query: false,
-      rounded: true,
-      stream: false,
-      striped: false,
-      top: false,
-      value: 25,
   }),
 };
 </script>

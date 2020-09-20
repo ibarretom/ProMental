@@ -199,10 +199,6 @@ export default {
         googleMapsRedirect(){
             window.location.href = "https://www.google.com.br/maps/search/hospitais/"
         },
-        
-        setProgressPercentage(percentage){
-            localStorage.setItem('pP', percentage)
-        }
 
     },/*End methods */
     
