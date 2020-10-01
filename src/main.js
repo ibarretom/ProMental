@@ -3,9 +3,10 @@ import App from './App.vue'
 import VueRouter from 'vue-router'
 import vuetify from './plugins/vuetify';
 import './../public/registerServiceWorker'
+import firebase from "./plugins/firebase.js"
 
 Vue.use(VueRouter);
-
+Vue.use(firebase)
 const router = new VueRouter({
 	routes: [
 		{

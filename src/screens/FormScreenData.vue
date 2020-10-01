@@ -46,7 +46,8 @@
                             :counter="maxTextAgeInput"
                             :rules="ageRule"
                             label="Digte sua idade"
-                            required>
+                            required
+                            v-on:keyup.enter="confirmar('ageOk')">
                             </v-text-field>
                             </v-form>
                     </v-col>
@@ -153,7 +154,15 @@ export default {
             }
             this.answareIndex++;
 
-        }
+        },
+        validateEmailAddress: function(e) {
+        if (e.keyCode === 13) {
+            alert('Enter was pressed');
+        } else if (e.keyCode === 50) {
+            alert('@ was pressed');
+        }      
+        this.log += e.key;
+        },
 
     }
 };

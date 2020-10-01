@@ -77,7 +77,7 @@ export default {
                 score: 0,
                 burnout: 0, //No fim do programa, se o usuario tem burnout, essa variavel vira um Boolean TRUE  
         },
-
+        fire: [],
         indexQuestionary: questionsBank.questionary.part,
         questionary: questionsBank.questionary.questions,
         healthTips: questionsBank.healthTips.tips,
@@ -116,7 +116,7 @@ export default {
 
             console.log('User Score:', this.user.score, 'Cut Score:', this.cutScore, 'FaintScore', this.faintScore);
             console.log('Antes:', 'Progress:', this.progress, 'Cut Score:', this.cutScore);
-            
+            console.log(this.fire[0].perguntas)
             if(id === 'work'){
                 this.user.burnout += answareValue;
             }
@@ -203,9 +203,19 @@ export default {
     },/*End methods */
     
     created(){
+
+        
+        this.$firebase.firestore().collection('questionario').get().then((snapshot) =>{
+            snapshot.docs.forEach( doc => {
+                //console.log(doc.data())
+                
+                this.fire.push(doc.data())
+            });
+            this.fire.reverse();
+            console.log(this.fire) 
+        });
+
         this.user = this.$route.params.user;
-        console.log('user do QuizScreen: ',this.user);
-        console.log('trabalha:', this.user.isWorking);
         switch (this.user.isWorking){
             case true:
                 this.addProgress = 100/(29); //O usuario precisa responder 29 questoes, poderia ser utilizado o tamanho do vetor questions, que se encontra no arquivo questions.js.
@@ -216,7 +226,9 @@ export default {
             default:
                 this.addProgress = null;
         }
+
         console.log('Add Progress:', this.addProgress);
+
     },
 
 }
