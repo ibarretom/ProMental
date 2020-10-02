@@ -37,7 +37,7 @@
                             </template>
                             </v-radio-group>
 
-                        <v-form ref="ageForm" v-else-if="steps === 'workOk'" >
+                        <v-form ref="ageForm" v-else-if="steps === 'workOk'" v-on:onkeyup.enter="confirmar('ageOk')">
                             <v-text-field
                             outlined
                             color="light-blue"
