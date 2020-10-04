@@ -37,7 +37,7 @@
                             </template>
                             </v-radio-group>
 
-                        <v-form ref="ageForm" v-else-if="steps === 'workOk'" v-on:onkeyup.enter="confirmar('ageOk')">
+                        <v-form ref="ageForm" v-else-if="steps === 'workOk'" v-on:submit.prevent="confirmar('ageOk')">
                             <v-text-field
                             outlined
                             color="light-blue"
@@ -154,14 +154,6 @@ export default {
             }
             this.answareIndex++;
 
-        },
-        validateEmailAddress: function(e) {
-        if (e.keyCode === 13) {
-            alert('Enter was pressed');
-        } else if (e.keyCode === 50) {
-            alert('@ was pressed');
-        }      
-        this.log += e.key;
         },
 
     }

@@ -1,5 +1,6 @@
 <template>
     <v-dialog
+        persistent
         v-model="dialogActive"
         max-width="290">
     <v-card>
@@ -40,7 +41,7 @@
 		methods: {
 			clickButton(option){
 				if(option){
-                    window.location.href = "https://forms.gle/LgGVW5C6Kqvwfqx66"
+                    window.open("https://forms.gle/LgGVW5C6Kqvwfqx66")
                     this.$router.push({name:'Home'});
 
                 }else{

@@ -77,12 +77,14 @@ export default {
                 score: 0,
                 burnout: 0, //No fim do programa, se o usuario tem burnout, essa variavel vira um Boolean TRUE  
         },
-        fire: [],
+
         indexQuestionary: questionsBank.questionary.part,
         questionary: questionsBank.questionary.questions,
         healthTips: questionsBank.healthTips.tips,
         healthTipsActive: questionsBank.healthTips.healthTipsActive,
         askIndex: questionsBank.questionary.askIndex,
+
+        fire: [],
 
         progress: 0,
         progressPrint: 0,
@@ -110,13 +112,14 @@ export default {
     methods: {
 
         answareQuestion(answare, id, answareValue){
-            console.log(answare, id, answareValue);
+            console.log(this.fire);
+            //console.log(answare, id, answareValue);
             
             this.user.score += answareValue;
 
-            console.log('User Score:', this.user.score, 'Cut Score:', this.cutScore, 'FaintScore', this.faintScore);
-            console.log('Antes:', 'Progress:', this.progress, 'Cut Score:', this.cutScore);
-            console.log(this.fire[0].perguntas)
+            //console.log('User Score:', this.user.score, 'Cut Score:', this.cutScore, 'FaintScore', this.faintScore);
+            //console.log('Antes:', 'Progress:', this.progress, 'Cut Score:', this.cutScore);
+
             if(id === 'work'){
                 this.user.burnout += answareValue;
             }
@@ -164,7 +167,7 @@ export default {
             }
             
             this.progressPrint = this.progress.toFixed()
-            console.log('Depois:', 'Progress:', this.progress, 'Cut Score:', this.cutScore);
+            //console.log('Depois:', 'Progress:', this.progress, 'Cut Score:', this.cutScore);
             
         },//answareQuestion function end
 
@@ -197,24 +200,21 @@ export default {
         },
 
         googleMapsRedirect(){
-            window.location.href = "https://www.google.com.br/maps/search/hospitais/"
+            window.open("https://www.google.com.br/maps/search/hospitais/")
         },
 
     },/*End methods */
     
     created(){
-
-        
         this.$firebase.firestore().collection('questionario').get().then((snapshot) =>{
             snapshot.docs.forEach( doc => {
-                //console.log(doc.data())
-                
-                this.fire.push(doc.data())
+            //console.log(doc.data())
+        
+            this.fire.push(doc.data())
             });
             this.fire.reverse();
             console.log(this.fire) 
         });
-
         this.user = this.$route.params.user;
         switch (this.user.isWorking){
             case true:

@@ -1,5 +1,5 @@
 export default{
-    questionary:{ 
+    questionary:{
         part:0,
         askIndex:0, 
         questions: [
