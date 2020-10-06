@@ -46,8 +46,7 @@
                             :counter="maxTextAgeInput"
                             :rules="ageRule"
                             label="Digte sua idade"
-                            required
-                            v-on:keyup.enter="confirmar('ageOk')">
+                            required>
                             </v-text-field>
                             </v-form>
                     </v-col>
@@ -139,20 +138,21 @@ export default {
             if(step === 'genderOk'){
                 this.steps = step;
                 this.user.gender = this.cardSelecion ? 'female':'male';
-
+                this.answareIndex++;
             }else if(step === 'workOk'){
                 this.steps = step;
-                this.user.isWorking = this.radio; 
+                this.user.isWorking = this.radio;
+                this.answareIndex++; 
             
-            }else if(step === 'ageOk'){
-                console.log('entrou')    
+            }else if(step === 'ageOk'){ 
                 if(this.$refs.ageForm.validate()){
                     this.steps = step;
                     this.user.age = this.ageField;
                     this.$router.push({name:'QuizScreen', params:{user:this.user}})
+                    this.answareIndex++;
                 }
             }
-            this.answareIndex++;
+            
 
         },
 

@@ -33,24 +33,40 @@
 </template>
 
 <script>
+import questionBank from "./../data_center/questions.js"
 export default {
-   components: {},
+	components: {},
 
-  data: () => ({
-	menu: 'mdi-menu',
-    startLabel: [
-      { label: "Olá bem vindo ao ProMental" },
-      { label: "Vamos começar o formulário?" },
-    ],
+	data: () => ({
+		menu: 'mdi-menu',
+		bank: questionBank,
+		teste: [],
+		startFormPage: '/formScreenData',
+		startText: "Cansaço, irritabilidade, insônia. Podem ser sintomas de stress.",
+		startText2: "Visando o seu bem estar, nós preparamos um questionario de saúde mental, que tal começarmos? Não tomará muito tempo.",
+		headLine: "Bem Vindo ao ProMental",
+		drawer: true,
+	}),
 
-    startFormPage: '/formScreenData',
-    startText: "Cansaço, irritabilidade, insônia. Podem ser sintomas de stress.",
-    startText2: "Visando o seu bem estar, nós preparamos um questionario de saúde mental, que tal começarmos? Não tomará muito tempo.",
-    headLine: "Bem Vindo ao ProMental",
-    drawer: true,
-  }),
+	methods: {},
 
-  methods: {},
+	created(){
+		this.$firebase.firestore().collection('dicas-de-saude').get().then((snapshot) =>{
+            snapshot.docs.forEach( doc => {
+            console.log(doc.data())
+				questionBank.healthTips.active = doc.data().ativo;
+				questionBank.healthTips.tips = doc.data().dicas;
+			});
+		});
+		this.$firebase.firestore().collection('questionario').get().then((snapshot) =>{
+			var index = 1;
+			snapshot.docs.forEach( doc => {
+				questionBank.questionary.questions[index].ask = doc.data().perguntas;
+				questionBank.questionary.questions[index].answare = doc.data().respostas;
+				index--;
+			});
+		});
+	}
 
 };
 </script>

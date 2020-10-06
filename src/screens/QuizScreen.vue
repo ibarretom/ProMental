@@ -52,7 +52,7 @@
                             @click="pushHome()">   
                             Finalizar
                         </v-btn>
-                        <Dialog :message="dialogText" :title="dialogTitle" :dialogActive="diagActive"/>
+                        <Dialog :message="dialog.conteudo" :title="dialog.titulo" :dialogActive="diagActive"/>
                         
                     </v-col>
             </v-row>
@@ -84,8 +84,6 @@ export default {
         healthTipsActive: questionsBank.healthTips.healthTipsActive,
         askIndex: questionsBank.questionary.askIndex,
 
-        fire: [],
-
         progress: 0,
         progressPrint: 0,
         lastQuestion: questionsBank.lastQuestion,
@@ -102,9 +100,10 @@ export default {
         nao: 'nao',
 
         diagActive:false,
-        dialogTitle: 'Colabore',
-        dialogText: `Este questionario foi desenvolvido por Professores e alunos da UFF.(Nenhum dos seus dados foram gravados.) 
-                    Com intuido de promover a pesquisa no país desenvolvemos um formulario sobre saúde mental, deseja participar? `,
+        dialog: {
+            texto: null,
+            conteudo: null,
+        },
         finalMessage: '',
         healthUnits: false,
     }),
@@ -112,7 +111,6 @@ export default {
     methods: {
 
         answareQuestion(answare, id, answareValue){
-            console.log(this.fire);
             //console.log(answare, id, answareValue);
             
             this.user.score += answareValue;
@@ -125,11 +123,11 @@ export default {
             }
             this.askIndex++;
             
-            console.log('Ask index:', this.askIndex);
-            //Confere se o usuario esta trabalhando e checka se a ultima pergunta foi alcançado. Por fim, muda a parte(o questionario)
+            //console.log('Ask index:', this.askIndex);
+            //Confere se o usuario esta trabalhando e checka se a ultima pergunta foi alcançada. Por fim, muda a parte(o questionario)
             if(this.user.isWorking){
                 if(this.questionary[this.indexQuestionary].ask[this.askIndex] === this.lastQuestion 
-                    && this.indexQuestionary != 2){ 
+                    && this.indexQuestionary != 1){ 
                 //A primeira parte do questionario é base(SQR20) que leva o index 0. A secunda o g4, index 1, assim por diante.
                 // Só adiciono 1 no questionario se for diferente de 2(work). Seria o mesmo que usar o tamanho do vetor questionary
                     this.indexQuestionary++;
@@ -137,7 +135,7 @@ export default {
                 }
             
             }else if(!this.user.isWorking){
-                 if(this.questionary[this.indexQuestionary].ask[this.askIndex] === this.lastQuestion && this.indexQuestionary != 1){
+                 if(this.questionary[this.indexQuestionary].ask[this.askIndex] === this.lastQuestion && this.indexQuestionary != 0){
                     this.indexQuestionary++;
                     this.askIndex = 0;
                 }
@@ -153,19 +151,17 @@ export default {
                 && id === 'base'){
                 if(this.user.isWorking === this.positive){
                     this.indexQuestionary++;
-                    this.progress = 100 - (13*this.addProgress);
+                    this.progress = 100 - (9*this.addProgress);
                     this.askIndex = 0;
                 
                 }else if(this.user.isWorking === this.negative){
-                    this.progress = 100 - (4*this.addProgress);
-                    this.indexQuestionary++;
-                    this.askIndex = 0;
-                    
+                    this.progress = 100;
+                    this.askIndex = 20
+                    this.healthTipsActive = true;
                 }
             }else{
                 this.progress += this.addProgress;
             }
-            
             this.progressPrint = this.progress.toFixed()
             //console.log('Depois:', 'Progress:', this.progress, 'Cut Score:', this.cutScore);
             
@@ -173,20 +169,21 @@ export default {
 
         //funcao para analisar o score do usuario
         scoreAnalysis(){
+            var tipsBurnout = false;
             if(this.user.score >= this.cutScore){
-                this.finalMessage = `Olha, você pode estar um pouco estressada(o) devido o seu dia, a dia. 
-                Deixo aqui algumas dicas de saúde e unidades de atendimento que estarão prontas para te ajudar.`;
                 this.healthUnits = true;
+                tipsBurnout = true
                 if(this.user.burnout >= this.burnoutCutScore ){
                     this.user.burnout = true
                 }
             }else{
-                this.finalMessage = "Tudo está perfeitamente bem. Segue umas dicas de saúde, para que vocẽ continue saudável";
+                tipsBurnout = false
             }
 
             this.healthTipsActive = true;
-
-            return this.finalMessage;
+            var tips = tipsBurnout ? this.finalMessage.burnout : this.finalMessage.saudavel;
+            console.log(this.finalMessage.saudavel)
+            return tips
             
         },
         //retorna a pergunta a ser exibida
@@ -206,15 +203,19 @@ export default {
     },/*End methods */
     
     created(){
-        this.$firebase.firestore().collection('questionario').get().then((snapshot) =>{
-            snapshot.docs.forEach( doc => {
-            //console.log(doc.data())
-        
-            this.fire.push(doc.data())
-            });
-            this.fire.reverse();
-            console.log(this.fire) 
+        this.$firebase.firestore().collection('convite').get().then((snapshot) =>{
+			snapshot.docs.forEach( doc => {
+				this.dialog = doc.data()
+			});
         });
+        
+        this.$firebase.firestore().collection('mensagem-final').get().then((snapshot) =>{
+			snapshot.docs.forEach( doc => {
+                this.finalMessage = doc.data()
+            });
+            console.log(this.finalMessage)
+        });
+        
         this.user = this.$route.params.user;
         switch (this.user.isWorking){
             case true:
