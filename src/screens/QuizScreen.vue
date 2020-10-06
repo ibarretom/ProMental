@@ -203,6 +203,21 @@ export default {
     },/*End methods */
     
     created(){
+        this.$firebase.firestore().collection('dicas-de-saude').get().then((snapshot) =>{
+            snapshot.docs.forEach( doc => {
+            console.log(doc.data())
+				questionsBank.healthTips.active = doc.data().ativo;
+				questionsBank.healthTips.tips = doc.data().dicas;
+			});
+		});
+		this.$firebase.firestore().collection('questionario').get().then((snapshot) =>{
+			var index = 1;
+			snapshot.docs.forEach( doc => {
+				questionsBank.questionary.questions[index].ask = doc.data().perguntas;
+				questionsBank.questionary.questions[index].answare = doc.data().respostas;
+				index--;
+			});
+		});
         this.$firebase.firestore().collection('convite').get().then((snapshot) =>{
 			snapshot.docs.forEach( doc => {
 				this.dialog = doc.data()

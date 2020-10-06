@@ -33,13 +33,12 @@
 </template>
 
 <script>
-import questionBank from "./../data_center/questions.js"
+
 export default {
 	components: {},
 
 	data: () => ({
 		menu: 'mdi-menu',
-		bank: questionBank,
 		teste: [],
 		startFormPage: '/formScreenData',
 		startText: "Cansaço, irritabilidade, insônia. Podem ser sintomas de stress.",
@@ -51,22 +50,16 @@ export default {
 	methods: {},
 
 	created(){
-		this.$firebase.firestore().collection('dicas-de-saude').get().then((snapshot) =>{
+		this.$firebase.firestore().collection('boas-vindas').get().then((snapshot) =>{
             snapshot.docs.forEach( doc => {
             console.log(doc.data())
-				questionBank.healthTips.active = doc.data().ativo;
-				questionBank.healthTips.tips = doc.data().dicas;
+				this.headLine = doc.data().titulo;
+				this.startText = doc.data().text1;
+				this.startText2 = doc.data().text2;
 			});
 		});
-		this.$firebase.firestore().collection('questionario').get().then((snapshot) =>{
-			var index = 1;
-			snapshot.docs.forEach( doc => {
-				questionBank.questionary.questions[index].ask = doc.data().perguntas;
-				questionBank.questionary.questions[index].answare = doc.data().respostas;
-				index--;
-			});
-		});
-	}
+
+	},
 
 };
 </script>

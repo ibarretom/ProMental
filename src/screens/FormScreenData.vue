@@ -9,7 +9,7 @@
         <v-container class="px-auto py-0" fluid>
             <v-row>
                 <v-col class=" pa-0" cols="12">
-                    <Message :textIn='botQuestion[0]'/>
+                    <Message :textIn='botQuestion'/>
                 </v-col>
                 </v-row>
 
@@ -112,8 +112,8 @@ export default {
         radio: null,
         answareIndex: 0,
         
-        botQuestion: ['Olá seja bem vindo ao questionário, antes de começar, que tal contar um pouco sobre você?'],
-        userAnsware: ['Eu sou', 'No momento eu', 'Eu tenho'],
+        botQuestion: 'Olá seja bem vindo ao questionário, antes de começar, que tal contar um pouco sobre você?',
+        userAnsware: ['Eu sou', 'No momento eu', 'Eu Tenho'],
         
         ageRule: [
                 ageRules => ageRules.length < 4 || 'Excedido quantidade de caracteres',
@@ -155,7 +155,16 @@ export default {
             
 
         },
+    },//end Methods
 
+    created(){
+		this.$firebase.firestore().collection('falas-coleta-de-dados').get().then((snapshot) =>{
+			snapshot.docs.forEach( doc => {
+				this.botQuestion = doc.data().sistema;
+				this.userAnsware = doc.data().usuario;
+				console.log(doc.data().sistema);
+			});
+		});
     }
 };
 </script>
