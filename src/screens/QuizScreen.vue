@@ -11,7 +11,7 @@
                     <message  v-if="(questionText() !== lastQuestion)" :textIn="questionText()"/>
                     
                     <template v-if="(healthTipsActive)">
-                        <message id='text' :textIn="scoreAnalysis()" :propLink="true"/>
+                        <message id='finalText' :textIn="scoreAnalysis()" :propLink="true"/>
                         <message-list class="mt-2" :list="healthTips"/>
                         <v-btn 
                             v-if="healthUnits"
@@ -112,7 +112,7 @@ export default {
 
         answareQuestion(answare, id, answareValue){
             //console.log(answare, id, answareValue);
-            
+            //console.log(this.healthTips)
             this.user.score += answareValue;
 
             //console.log('User Score:', this.user.score, 'Cut Score:', this.cutScore, 'FaintScore', this.faintScore);
@@ -182,7 +182,6 @@ export default {
 
             this.healthTipsActive = true;
             var tips = tipsBurnout ? this.finalMessage.burnout : this.finalMessage.saudavel;
-            console.log(this.finalMessage.saudavel)
             return tips
             
         },
@@ -202,22 +201,8 @@ export default {
 
     },/*End methods */
     
+
     created(){
-        this.$firebase.firestore().collection('dicas-de-saude').get().then((snapshot) =>{
-            snapshot.docs.forEach( doc => {
-            console.log(doc.data())
-				questionsBank.healthTips.active = doc.data().ativo;
-				questionsBank.healthTips.tips = doc.data().dicas;
-			});
-		});
-		this.$firebase.firestore().collection('questionario').get().then((snapshot) =>{
-			var index = 1;
-			snapshot.docs.forEach( doc => {
-				questionsBank.questionary.questions[index].ask = doc.data().perguntas;
-				questionsBank.questionary.questions[index].answare = doc.data().respostas;
-				index--;
-			});
-		});
         this.$firebase.firestore().collection('convite').get().then((snapshot) =>{
 			snapshot.docs.forEach( doc => {
 				this.dialog = doc.data()
@@ -228,7 +213,6 @@ export default {
 			snapshot.docs.forEach( doc => {
                 this.finalMessage = doc.data()
             });
-            console.log(this.finalMessage)
         });
         
         this.user = this.$route.params.user;
@@ -243,9 +227,10 @@ export default {
                 this.addProgress = null;
         }
 
-        console.log('Add Progress:', this.addProgress);
-
     },
+    mounted(){
+        
+    }
 
 }
 </script>

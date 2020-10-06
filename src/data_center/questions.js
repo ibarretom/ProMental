@@ -16,7 +16,7 @@ export default{
 
     healthTips:{
         active: false, 
-        tips: null
+        tips: []
     },
 
     lastQuestion: 'fim',

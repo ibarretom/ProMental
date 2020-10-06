@@ -157,12 +157,11 @@ export default {
         },
     },//end Methods
 
-    created(){
+    mounted(){
 		this.$firebase.firestore().collection('falas-coleta-de-dados').get().then((snapshot) =>{
 			snapshot.docs.forEach( doc => {
 				this.botQuestion = doc.data().sistema;
 				this.userAnsware = doc.data().usuario;
-				console.log(doc.data().sistema);
 			});
 		});
     }
