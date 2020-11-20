@@ -20,13 +20,13 @@ const router = new VueRouter({
 			redirect: '/home'
 		},
 		{
-			path: '/formScreenData',
+			path: '/ds', /*dados iniciais*/
 			name: 'FormScreenData',
 			component: () => 
 					import(/* webpackChunkName: "formScreenData" */ './screens/FormScreenData')
 		},
 		{
-			path: '/quizScreen',
+			path: '/qs', /*quiz screen*/
 			name: 'QuizScreen',
 			component: () => 
 					import(/* webpackChunkName: "quizScreen" */ './screens/QuizScreen')
