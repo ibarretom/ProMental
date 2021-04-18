@@ -17,8 +17,25 @@
           <v-radio v-for="(radio, index) in workOptions" :key="index" :label="radio.label" :value="radio.value" ></v-radio>
         </v-radio-group>
       </div>
+      <div class="opcoes-estado" v-if='true'>
+        <v-select
+          :items="listaEstados"
+          v-model="estado"
+          label="Estado"
+          dense
+          outlined
+        ></v-select>
+        <v-select
+          v-if='estado'
+          v-model="municipio"
+          :items="listaMunicipios"
+          label="Cidade"
+          dense
+          outlined
+        ></v-select>
+      </div>
       <v-form ref="ageForm" class='idade' v-if='steps[answareIndex] === "age"' v-on:submit.prevent="confirmar(steps[answareIndex])">
-        <v-text-field outlined color="light-blue" type="number" v-model="ageField" :counter="maxTextAgeInput" :rules="ageRule" label="Digte sua idade" required> </v-text-field>
+        <v-text-field outlined color="light-blue" type="number" v-model="ageField" :counter="maxTextAgeInput" :rules="ageRule" label="Digite sua idade" required> </v-text-field>
       </v-form>
     </section>
     </div>
@@ -36,12 +53,14 @@
 import CardItemGender from '../components/CardItemGender.vue'
 import ToolBar from './../components/ToolBar'
 import Message from './../components/Message'
+import axios from 'axios'
+
 export default {
   components: { ToolBar, CardItemGender, Message /* ,TextAnsware, */ },
   data: () => {
     return {
       cardSelection: null,
-      steps: ['gender', 'work', 'age'],
+      steps: ['gender', 'municipio', 'work', 'age'],
       step: 0,
       user: {
         gender: null,
@@ -58,7 +77,7 @@ export default {
       answareIndex: 0,
 
       botQuestion: 'Olá seja bem vindo ao questionário, antes de começar, que tal contar um pouco sobre você?',
-      userAnsware: ['Eu sou', 'No momento eu', 'Eu Tenho'],
+      userAnsware: ['Eu sou', 'Eu sou do', 'No momento eu', 'Eu Tenho'],
 
       ageRule: [(ageRules) => ageRules.length < 4 || 'Excedido quantidade de caracteres', (ageRules) => ageRules !== '' || 'Campo Invalido'],
       homeRouter: '/home',
@@ -71,7 +90,22 @@ export default {
       workOptions: [
         { label: 'Trabalho', value: 1 },
         { label: 'Não Trabalho', value: 2 }
-      ]
+      ],
+
+      listaEstados: [],
+      listaComUF: [],
+      listaMunicipios: [],
+      estado: null,
+      municipio: null
+    }
+  },
+  watch: {
+    async estado () {
+      const indexUF = this.listaComUF.filter((estado) => { return estado.nome === this.estado })
+      console.log('uf', indexUF)
+      const uf = indexUF[0].sigla
+      const listaMunicipios = await axios.get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/distritos`)
+      listaMunicipios.data.forEach(municipio => { this.listaMunicipios.push(municipio.nome) })
     }
   },
   methods: {
@@ -94,37 +128,23 @@ export default {
       }
     }
   }, // end Methods
-
-  mounted () {
-    this.$firebase
-      .firestore()
-      .collection('falas-coleta-de-dados')
-      .get()
-      .then((snapshot) => {
-        snapshot.docs.forEach((doc) => {
-          this.botQuestion = doc.data().sistema
-          this.userAnsware = doc.data().usuario
-        })
-      })
+  async created () {
+    const uf = await axios.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados')
+    const ufData = uf.data
+    this.estado = ufData.forEach(uf => {
+      this.listaEstados.push(uf.nome)
+      this.listaComUF.push({ sigla: uf.sigla, nome: uf.nome })
+    })
+    this.listaEstados.sort()
+    this.$root.$emit('spinner::hide')
   }
 }
 </script>
 
 <style scoped>
-.borda{
-  border: 1px solid black;
-}
 .content{
   padding: 8px;
   height: 100%;
-}
-.grid-layout{
-  display: grid;
-  height: 100%;
-}
-.botao-confirmar{
-  /* position: absolute; */
-  /* bottom: 24px; */
 }
 .content-button{
   width: 50vw;

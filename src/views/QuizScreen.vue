@@ -134,7 +134,6 @@ export default {
         this.progress += this.addProgress
       }
       this.progressPrint = this.progress.toFixed()
-      // console.log('Depois:', 'Progress:', this.progress, 'Cut Score:', this.cutScore);
     }, // answareQuestion function end
 
     // funcao para analisar o score do usuario
@@ -201,10 +200,11 @@ export default {
           questionsBank.questionary.questions[index].ask = doc.data().perguntas
           questionsBank.questionary.questions[index].answare = doc.data().respostas
           index++
+          this.$root.$emit('spinner::hide')
         })
       })
 
-    this.user = this.$route.params.user
+    this.user = this.$route.params.user || { isWorking: true }
     switch (this.user.isWorking) {
       case true:
         this.addProgress = 100 / 29 // O usuario precisa responder 29 questoes, poderia ser utilizado o tamanho do vetor questions, que se encontra no arquivo questions.js.
@@ -217,6 +217,9 @@ export default {
     }
   },
   mounted () {
+    questionsBank.questionario.then(perguntas => {
+      console.log(perguntas)
+    })
   }
 }
 </script>
