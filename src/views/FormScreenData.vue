@@ -17,7 +17,7 @@
           <v-radio v-for="(radio, index) in workOptions" :key="index" :label="radio.label" :value="radio.value" ></v-radio>
         </v-radio-group>
       </div>
-      <div class="opcoes-estado" v-if='true'>
+      <div class="opcoes-estado" v-if='steps[answareIndex] === "municipio"'>
         <v-select
           :items="listaEstados"
           v-model="estado"
@@ -26,7 +26,7 @@
           outlined
         ></v-select>
         <v-select
-          v-if='estado'
+          v-if='municipioAux'
           v-model="municipio"
           :items="listaMunicipios"
           label="Cidade"
@@ -42,7 +42,7 @@
       <div class='down'>
         <section class="botao-confirmar d-flex justify-center">
           <div class='content-button'>
-            <v-btn v-if='ageField || radio || cardSelection ' confirma block color="primary" dark large rounded @click='confirmar(steps[answareIndex])'> confirmar </v-btn>
+            <v-btn v-if='ageField || municipio || radio || cardSelection ' confirma block color="primary" dark large rounded @click='confirmar(steps[answareIndex])'> confirmar </v-btn>
           </div>
         </section>
       </div>
@@ -67,7 +67,8 @@ export default {
         age: null,
         isWorking: null,
         score: null,
-        burnout: null
+        burnout: null,
+        localizacao: { estado: null, municipio: null }
       },
 
       ageField: '',
@@ -96,30 +97,41 @@ export default {
       listaComUF: [],
       listaMunicipios: [],
       estado: null,
-      municipio: null
+      municipio: null,
+      municipioAux: false
     }
   },
   watch: {
     async estado () {
-      const indexUF = this.listaComUF.filter((estado) => { return estado.nome === this.estado })
-      console.log('uf', indexUF)
-      const uf = indexUF[0].sigla
-      const listaMunicipios = await axios.get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/distritos`)
-      listaMunicipios.data.forEach(municipio => { this.listaMunicipios.push(municipio.nome) })
+      try {
+        const indexUF = this.listaComUF.filter((estado) => { return estado.nome === this.estado })
+        console.log('uf', indexUF)
+        const uf = indexUF[0].sigla
+        const listaMunicipios = await axios.get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/distritos`)
+        listaMunicipios.data.forEach(municipio => { this.listaMunicipios.push(municipio.nome) })
+        this.municipioAux = true
+      } catch (e) {
+        console.log(e.message)
+      }
     }
   },
   methods: {
     confirmar (step) {
-      if (this.answareIndex !== 2) {
+      if (this.answareIndex !== 3) {
         this.answareIndex++
       }
       if (step === this.steps[0]) {
         this.user.gender = this.cardSelection === 2 ? 'female' : 'male'
         this.cardSelection = 0
       } else if (step === this.steps[1]) {
+        this.user.localizacao.estado = this.estado
+        this.user.localizacao.municipio = this.municipio
+        this.municipio = 0
+        this.estado = 0
+      } else if (step === this.steps[2]) {
         this.user.isWorking = this.radio === 1
         this.radio = 0
-      } else if (step === this.steps[2]) {
+      } else if (step === this.steps[3]) {
         if (this.$refs.ageForm.validate()) {
           this.steps = step
           this.user.age = this.ageField
