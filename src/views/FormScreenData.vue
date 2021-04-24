@@ -53,6 +53,7 @@
 import CardItemGender from '../components/CardItemGender.vue'
 import ToolBar from './../components/ToolBar'
 import Message from './../components/Message'
+import db from './../data_center/questions.js'
 import axios from 'axios'
 
 export default {
@@ -65,9 +66,8 @@ export default {
       user: {
         gender: null,
         age: null,
-        isWorking: null,
-        score: null,
-        burnout: null,
+        trabalhando: null,
+        score: { sqr20: null, trabalho: null, esgotamento: null },
         localizacao: { estado: null, municipio: null }
       },
 
@@ -105,10 +105,10 @@ export default {
     async estado () {
       try {
         const indexUF = this.listaComUF.filter((estado) => { return estado.nome === this.estado })
-        console.log('uf', indexUF)
         const uf = indexUF[0].sigla
         const listaMunicipios = await axios.get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/distritos`)
         listaMunicipios.data.forEach(municipio => { this.listaMunicipios.push(municipio.nome) })
+        this.listaMunicipios.sort()
         this.municipioAux = true
       } catch (e) {
         console.log(e.message)
@@ -129,7 +129,7 @@ export default {
         this.municipio = 0
         this.estado = 0
       } else if (step === this.steps[2]) {
-        this.user.isWorking = this.radio === 1
+        this.user.trabalhando = this.radio === 1
         this.radio = 0
       } else if (step === this.steps[3]) {
         if (this.$refs.ageForm.validate()) {
@@ -149,6 +149,8 @@ export default {
     })
     this.listaEstados.sort()
     this.$root.$emit('spinner::hide')
+    db.questionario = await db.colecao('questionario')
+    db.questionario_ordem = await db.colecao('questionario-ordem')
   }
 }
 </script>

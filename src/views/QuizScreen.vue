@@ -5,33 +5,20 @@
     <v-container class="px-0 py-0" fluid no-gutters>
       <v-row>
         <v-col cols="12">
-          <message v-if="questionText() !== lastQuestion" :botQuestion="questionText()" />
-
-          <template v-if="healthTipsActive">
-            <message id="finalText" :botQuestion="scoreAnalysis()" :propLink="true" />
-            <message-list class="mt-2" :listItem="healthTips" :title="tituloDicas"/>
-            <v-btn v-if="healthUnits" class="primary mt-2 mx-md-4 radius" @click="googleMapsRedirect()" depressed large> Unidades de saúde </v-btn>
-          </template>
+          <message :botQuestion="questionText()" />
         </v-col>
       </v-row>
     </v-container>
 
     <v-container class='bottom'>
-      <v-row v-if="!healthTipsActive" class="border-chat justify-space-around flex-row-reverse pa-2" no-gutters>
-        <template v-for="(answare, index) in questionary[indexQuestionary].answare">
-          <v-col :class="questionary[indexQuestionary].id === 'work' ? 'col-12 col-md-4 col-sm-5 mx-1 my-1' : 'col-4 col-md-2 mx-1'" :key="index">
-            <v-btn block max-width="100%" class="wrap rounded-xl" color="primary" @click="answare === 'finalizar' ? pushHome() : answareQuestion(answare, questionary[indexQuestionary].id, index)">
+      <v-row class="border-chat justify-space-around flex-row-reverse pa-2" no-gutters>
+        <template v-for="(answare, index) in questionarioSelecionado.respostas">
+          <v-col :class="questionarioSelecionado.tipo === 'trabalho' ? 'col-12 col-md-4 col-sm-5 mx-1 my-1' : 'col-4 col-md-2 mx-1'" :key="index">
+            <v-btn block max-width="100%" class="wrap rounded-xl" color="primary" @click="answareQuestion(index, 'base')">
               {{ answare }}
             </v-btn>
           </v-col>
         </template>
-      </v-row>
-
-      <v-row v-if="healthTipsActive" class="border-chat justify-space-around flex-row-reverse" no-gutters>
-        <v-col class="col-6 col-md-3 col-sm-3 my-2">
-          <v-btn block max-width="100%" class="wrap rounded-xl" color="primary" @click="pushHome()"> Finalizar </v-btn>
-          <Dialog :message="dialog.conteudo" :title="dialog.titulo" :dialogActive="diagActive" />
-        </v-col>
       </v-row>
     </v-container>
   </v-container>
@@ -39,187 +26,163 @@
 
 <script>
 import Message from '../components/Message.vue'
-import MessageList from '../components/TextList.vue'
 import ToolBar from '../components/ToolBar.vue'
-import questionsBank from './../data_center/questions.js'
-import Dialog from '../components/DialogGoogleForm.vue'
+import db from './../data_center/questions.js'
 
 export default {
-  components: { ToolBar, Message, MessageList, Dialog },
+  components: { ToolBar, Message },
   data: () => ({
     user: {
       age: null,
       gender: null,
-      isWorking: null,
-      score: 0,
-      burnout: 0 // No fim do programa, se o usuario tem burnout, essa variavel vira um Boolean TRUE
+      tralhando: null,
+      score: {
+        sqr20: 0,
+        trabalho: 0,
+        esgotamento: 0
+      },
+      localizacao: { estado: null, municipio: null }
     },
 
-    indexQuestionary: questionsBank.questionary.part,
-    questionary: questionsBank.questionary.questions,
-    healthTips: questionsBank.healthTips.tips,
-    healthTipsActive: questionsBank.healthTips.active,
-    askIndex: questionsBank.questionary.askIndex,
+    tempScore: 0,
+    indiceQuest: 0,
+    indicePerg: 0,
+
+    questionarios: [],
+    questionarioSelecionado: '',
+    ordem: '',
+
+    perguntas: [],
+    perguntaExibida: '',
 
     progress: 0,
+    progressoSalvo: 0,
     progressPrint: 0,
-    lastQuestion: questionsBank.lastQuestion,
-    tituloDicas: 'Dicas de Saúde',
-    cutScore: 7,
-    burnoutCutScore: 29,
-    faintScore: 0,
-
     addProgress: null,
+
     arrowLeft: 'mdi-arrow-left',
 
     negative: false,
     positive: true,
-    sim: 'sim',
-    nao: 'nao',
 
-    diagActive: false,
-    dialog: {
-      texto: null,
-      conteudo: null
-    },
-    finalMessage: {
-      burnout: null,
-      saudavel: null
-    },
-    healthUnits: false,
     pushTo: '/home'
   }),
+  computed: {
+    questionarioEmUso () {
+      const { questionarios, ordem } = this
+      const selecionar = questionarios.filter(quest => { return quest.tipo === ordem[this.indiceQuest] })
+      return selecionar[0]
+    }
+  },
+  watch: {
+    indiceQuest () {
+      this.questionarioSelecionado = this.questionarioEmUso
+      this.perguntas = this.questionarioSelecionado.perguntas
+    },
+    tempScore (scoreAtual) {
+      const posicaoDoArray = this.indiceQuest + 1
+      const limite = scoreAtual >= this.questionarioSelecionado.scoreCorte
+      const questionario = this.ordem[this.indiceQuest]
 
+      if (limite && posicaoDoArray <= this.ordem.length) {
+        this.atualizaScore()
+        this.user.trabalhando ? console.log() : this.proximaTela()
+        if (questionario === 'esgotamento-n1') {
+          this.progressPrint = 100
+          this.proximaTela()
+        } else if (questionario !== 'esgotamento-n2') {
+          this.indiceQuest++
+          this.indicePerg = 0
+        }
+      }
+    },
+    perguntaExibida (atual, anterior) {
+      const posicaoDoArray = this.indiceQuest + 1
+
+      if (atual === 'fim' && posicaoDoArray < this.ordem.length) {
+        this.indiceQuest++
+        this.indicePerg = 0
+        this.user.trabalhando ? console.log() : this.proximaTela()
+      } else if (atual === 'fim' && posicaoDoArray === this.ordem.length) {
+        // puxa para proxima tela
+        this.proximaTela()
+      }
+    }
+  },
   methods: {
-    answareQuestion (answare, id, answareValue) {
-      this.user.score += answareValue
+    answareQuestion (value) {
+      this.tempScore += value
+      this.indicePerg++
+      this.modificarProgresso()
+    }, // answareQuestion function end
 
-      if (id === 'work') {
-        this.user.burnout += answareValue
-      }
-      this.askIndex++
+    modificarProgresso () {
+      const { positive, negative } = this
 
-      // Confere se o usuario esta trabalhando e checka se a ultima pergunta foi alcançada. Por fim, muda a parte(o questionario)
-      if (this.user.isWorking) {
-        if (this.questionary[this.indexQuestionary].ask[this.askIndex] === this.lastQuestion && this.indexQuestionary !== 1) {
-          // A primeira parte do questionario é base(SQR20) que leva o index 0. A secunda o g4, index 1, assim por diante.
-          // Só adiciono 1 no questionario se for diferente de 1(work). Seria o mesmo que usar o tamanho do vetor questionary
-          this.indexQuestionary++
-          this.askIndex = 0
-        }
-      } else if (!this.user.isWorking) {
-        if (this.questionary[this.indexQuestionary].ask[this.askIndex] === this.lastQuestion && this.indexQuestionary !== 0) {
-          this.indexQuestionary++
-          this.askIndex = 0
-        }
-      }
-
-      // ativa as dicas no fim do quesitonoario
-      if (this.questionary[this.indexQuestionary].ask[this.askIndex] === this.lastQuestion) {
-        this.healthTipsActive = true
-      }
-
-      // modifica a barra de progresso
-      if (this.user.score === this.cutScore && id === 'base') {
-        if (this.user.isWorking === this.positive) {
-          this.indexQuestionary++
-          this.progress = 100 - 9 * this.addProgress
-          this.askIndex = 0
-        } else if (this.user.isWorking === this.negative) {
+      if (this.tempScore >= this.questionarioSelecionado.scoreCorte) {
+        if (this.user.tralhando === positive) {
+          this.progressoSalvo += this.questionarioSelecionado.tamanho * this.addProgress
+          this.progress = this.progressoSalvo // 9 questoes do questionario de trabalho mais 11 do esgotamento
+        } else if (this.user.tralhando === negative) {
           this.progress = 100
-          this.askIndex = 20
-          this.healthTipsActive = true
+          this.indicePerg = 20
         }
       } else {
         this.progress += this.addProgress
       }
-      this.progressPrint = this.progress.toFixed()
-    }, // answareQuestion function end
 
-    // funcao para analisar o score do usuario
-    scoreAnalysis () {
-      var tipsBurnout = false
-      if (this.user.score >= this.cutScore) {
-        this.healthUnits = true
-        tipsBurnout = true
-        if (this.user.burnout >= this.burnoutCutScore) {
-          this.user.burnout = true
-        }
-      } else {
-        tipsBurnout = false
-      }
-
-      this.healthTipsActive = true
-      var tips = tipsBurnout ? this.finalMessage.burnout : this.finalMessage.saudavel
-      this.pushTo = null
-      this.arrowLeft = null
-      return tips
+      this.progressPrint = this.progress.toFixed(1)
     },
     // retorna a pergunta a ser exibida
     questionText () {
-      return this.questionary[this.indexQuestionary].ask[this.askIndex]
+      this.perguntaExibida = this.perguntas[this.indicePerg]
+      return this.perguntaExibida
     },
-    // exibe o dialogo no fim, ou puxa o usuario para a tela inicial, só descomentar o codigo.
-    pushHome () {
-      this.diagActive = true
-      // this.$router.push({name:'Home'});
+    atualizaScore () {
+      const questionario = this.ordem[this.indiceQuest]
+      if (questionario === 'sqr20') {
+        this.user.score.sqr20 = this.tempScore
+        this.tempScore = 0
+      } else if (questionario === 'trabalho') {
+        this.user.score.trabalho = this.tempScore
+        this.tempScore = 0
+      } else if (questionario === 'esgotamento-n1' || questionario === 'esgotamento-n2') {
+        this.user.score.esgotamento = this.tempScore
+      }
     },
-
-    googleMapsRedirect () {
-      window.open('https://www.google.com.br/maps/search/hospitais/')
+    proximaTela () {
+      this.$router.params = this.user
+      this.$router.push({ name: 'ResultScreen' })
+    },
+    analisaScore () {
+      // grava o score do usuario e analisa as condições de stress.
     }
   } /* End methods */,
 
-  created () {
-    this.$firebase
-      .firestore()
-      .collection('convite')
-      .get()
-      .then((snapshot) => {
-        snapshot.docs.forEach((doc) => {
-          this.dialog = doc.data()
-        })
-      })
-
-    this.$firebase
-      .firestore()
-      .collection('mensagem-final')
-      .get()
-      .then((snapshot) => {
-        snapshot.docs.forEach((doc) => {
-          this.finalMessage = doc.data()
-        })
-      })
-    this.$firebase
-      .firestore()
-      .collection('questionario')
-      .get()
-      .then((snapshot) => {
-        var index = 0
-        snapshot.docs.forEach((doc) => {
-          questionsBank.questionary.questions[index].ask = doc.data().perguntas
-          questionsBank.questionary.questions[index].answare = doc.data().respostas
-          index++
-          this.$root.$emit('spinner::hide')
-        })
-      })
-
-    this.user = this.$route.params.user || { isWorking: true }
-    switch (this.user.isWorking) {
-      case true:
-        this.addProgress = 100 / 29 // O usuario precisa responder 29 questoes, poderia ser utilizado o tamanho do vetor questions, que se encontra no arquivo questions.js.
-        break
-      case false:
+  async created () {
+    try {
+      this.user = this.$route.params.user // || { score: { sqr20: 0, trabalho: 0, esgotamento: 0 }, tralhando: true }
+      if (this.user.tralhando) {
+        this.addProgress = 100 / 40 // O usuario precisa responder 40 questoes, poderia ser utilizado o tamanho do vetor questions, que se encontra no arquivo questions.js.
+      } else {
         this.addProgress = 100 / 20 // Novamente poderia ser utilizado o tamanho, mais, o uso de tamanho de um vetor no js nao é tão confiavel.
-        break
-      default:
-        this.addProgress = null
+      }
+      if (!db.questionario) {
+        this.$router.push({ name: 'FormScreenData' })
+      }
+    } catch (e) {
+      this.$router.push({ name: 'FormScreenData' })
     }
+
+    this.questionarios = db.questionario
+    const seq = db.questionario_ordem
+    this.ordem = seq[0].ordem
+
+    this.questionarioSelecionado = this.questionarioEmUso
+    this.perguntas = this.questionarioSelecionado.perguntas
   },
   mounted () {
-    questionsBank.questionario.then(perguntas => {
-      console.log(perguntas)
-    })
+    this.$root.$emit('spinner::hide')
   }
 }
 </script>

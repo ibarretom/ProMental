@@ -24,6 +24,12 @@ const routes = [
     name: 'QuizScreen',
     component: () =>
       import(/* webpackChunkName: "quizScreen" */ '../views/QuizScreen')
+  },
+  {
+    path: '/rs', /* quiz screen */
+    name: 'ResultScreen',
+    component: () =>
+      import(/* webpackChunkName: "quizScreen" */ '../views/ResultScreen')
   }
 ]
 

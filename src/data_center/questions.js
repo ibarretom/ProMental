@@ -9,18 +9,7 @@ async function colecao (colecao) {
 }
 
 export default {
-  questionario: colecao('questionario'),
-  questionary: {
-    part: 0,
-    askIndex: 0,
-    questions: null
-  },
-
-  healthTips: {
-    active: false,
-    tips: []
-  },
-
-  lastQuestion: 'fim',
+  questionario: null,
+  questionario_ordem: null,
   colecao
 }
