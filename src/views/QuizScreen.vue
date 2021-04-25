@@ -35,7 +35,7 @@ export default {
     user: {
       age: null,
       gender: null,
-      tralhando: null,
+      trabalhando: null,
       score: {
         sqr20: 0,
         trabalho: 0,
@@ -120,10 +120,10 @@ export default {
       const { positive, negative } = this
 
       if (this.tempScore >= this.questionarioSelecionado.scoreCorte) {
-        if (this.user.tralhando === positive) {
+        if (this.user.trabalhando === positive) {
           this.progressoSalvo += this.questionarioSelecionado.tamanho * this.addProgress
           this.progress = this.progressoSalvo // 9 questoes do questionario de trabalho mais 11 do esgotamento
-        } else if (this.user.tralhando === negative) {
+        } else if (this.user.trabalhando === negative) {
           this.progress = 100
           this.indicePerg = 20
         }
@@ -162,9 +162,11 @@ export default {
   async created () {
     try {
       this.user = this.$route.params.user // || { score: { sqr20: 0, trabalho: 0, esgotamento: 0 }, tralhando: true }
-      if (this.user.tralhando) {
+      console.log('console', this.user.trabalhando)
+      if (this.user.trabalhando) {
         this.addProgress = 100 / 40 // O usuario precisa responder 40 questoes, poderia ser utilizado o tamanho do vetor questions, que se encontra no arquivo questions.js.
       } else {
+        console.log('else')
         this.addProgress = 100 / 20 // Novamente poderia ser utilizado o tamanho, mais, o uso de tamanho de um vetor no js nao é tão confiavel.
       }
       if (!db.questionario) {

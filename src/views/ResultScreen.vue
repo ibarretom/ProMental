@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <v-container>
         ola
-    </div>
+    </v-container>
 </template>
