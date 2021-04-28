@@ -1,5 +1,5 @@
 <template>
-  <section class='content px-md-16 d-flex flex-column justify-space-between'>
+  <v-container class='content px-md-16 d-flex flex-column justify-space-between'>
     <tool-bar :active="false" :flat="true" :backTo="homeRouter" color="white" icon="mdi-arrow-left" />
     <div class='up d-flex flex-column'>
       <section class='pergunta d-flex pt-4 px-4'>
@@ -46,7 +46,7 @@
           </div>
         </section>
       </div>
-  </section>
+  </v-container>
 </template>
 
 <script>
@@ -111,7 +111,6 @@ export default {
         this.listaMunicipios.sort()
         this.municipioAux = true
       } catch (e) {
-        console.log(e.message)
       }
     }
   },

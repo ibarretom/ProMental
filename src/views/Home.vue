@@ -6,10 +6,10 @@
       </v-flex>
 
       <v-flex id="textoAqui" class="mx-4" xs12 sm12 md6>
-        <p id="titulo" class="border mb-md-10 text-h5 text-sm-h3 text-md-h3 font-weight-bold" style="text-align: center">
+        <p id="titulo" v-html="bemVindo.titulo" class="border mb-md-10 text-h5 text-sm-h3 text-md-h3 font-weight-bold" style="text-align: center">
 
         </p>
-        <p id="texto" class="border mx-2 text-body-1 text-sm-h5 font-weight-regular" style="text-align: center"></p>
+        <p id="texto" v-html="bemVindo.texto" class="border mx-2 text-body-1 text-sm-h5 font-weight-regular" style="text-align: center"></p>
       </v-flex>
 
       <v-flex class="border mx-4 mb-2" xs12 sm12 md6>
@@ -23,13 +23,13 @@
 import questionsBank from './../data_center/questions.js'
 export default {
   data: () => ({
-    startFormPage: '/ds'
+    startFormPage: '/ds',
+    bemVindo: { titulo: '', texto: '' }
   }),
 
-  async mounted () {
+  async beforeCreate () {
     const welcome = await questionsBank.colecao('boas-vindas')
-    document.getElementById('titulo').innerHTML = welcome[0].titulo
-    document.getElementById('texto').innerHTML = welcome[0].texto
+    this.bemVindo = welcome[0]
     this.$root.$emit('spinner::hide')
   }
 
