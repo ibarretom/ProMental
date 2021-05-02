@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-main>
-      <load />
+      <load :show='true' />
       <router-view></router-view>
     </v-main>
   </v-app>
@@ -12,15 +12,16 @@
 }
 </style>
 <script>
-import Load from './components/LoadScreen'
 export default {
   name: 'App',
 
-  components: { Load },
-
   data: () => ({
     //
-  })
+  }),
+  created () {
+    console.log('criado')
+    this.$root.$emit('spinner::show')
+  }
 }
 </script>
 <style>

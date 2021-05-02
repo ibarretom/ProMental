@@ -1,5 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+
+import ResultScreen from '../views/ResultScreen'
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -28,8 +31,7 @@ const routes = [
   {
     path: '/rs', /* quiz screen */
     name: 'ResultScreen',
-    component: () =>
-      import(/* webpackChunkName: "quizScreen" */ '../views/ResultScreen')
+    component: ResultScreen
   }
 ]
 

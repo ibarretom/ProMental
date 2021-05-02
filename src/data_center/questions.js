@@ -9,7 +9,8 @@ async function colecao (colecao) {
 }
 
 export default {
+  colecao,
   questionario: null,
   questionario_ordem: null,
-  colecao
+  dicas: null
 }
