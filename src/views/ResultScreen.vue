@@ -93,12 +93,10 @@ export default {
       this.verificaEstresse(estresse)
     } catch (e) {
       estresse = this.$cookies.get('estressado')
-      alert('tem cookie')
       if (estresse === 'false' || estresse === 'true') {
-        alert(estresse)
         this.verificaEstresse(estresse)
       } else {
-        // this.$router.push({ name: 'Home' })
+        this.$router.push({ name: 'Home' })
       }
     }
 
