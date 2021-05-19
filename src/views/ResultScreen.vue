@@ -4,7 +4,8 @@
       <v-img
         class="pic-container rounded-lg"
         :app-atribuicao='exibicao.atribuicao'
-        :src="require(`@/assets/dicas/${exibicao.img}.jpg`)"
+        contain
+        :src="require(`@/assets/dicas/${exibicao.img}.svg`)"
       ></v-img>
       <h2 :class="`text-center ${exibicao.color}  mt-2 rounded-lg white--text`">{{exibicao.titulo}}</h2>
       <article class="mt-4" v-html="exibicao.descricao"></article>
@@ -103,7 +104,11 @@ export default {
     const dicas = await db.colecao('dicas-de-saude')
 
     dicas.forEach(dica => { this.dicas.push(dica) })
-    this.dicas.push({ titulo: 'Agradecemos sua Participação', descricao: 'Sobre o PENSU', img: 'saudavel', atribuicao: 'PESNU UFF', color: 'primary' })
+    const aboutPensu = `<strong><i> Visite nossas redes sociais!! </i></strong>  
+    <br/><br/> <a href="https://youtube.com/c/Espa%C3%A7oAbertoparaSa%C3%BAdeUFF"><strong style="color: #c4302b;" > <i class="fab fa-youtube"></i> Youtube:</strong> Espaço Aberto para Saúde</a> 
+    <br/><br/> <a href="https://www.facebook.com/pg/EspacoAbertoParaSaude"><strong style="color: #3b5998";> <i class="fab fa-facebook"></i> Facebook:</strong> <i>@EspacoAbertoParaSaude</i></a>
+    <br/><br/> <a href="https://www.instagram.com/espacoabertosaudeuff/"><strong style="color: #3f729b";> <i class="fab fa-instagram"></i> Instagram:</strong> <i>@espacoabertosaudeuff</i></a>`
+    this.dicas.push({ titulo: 'Agradecemos sua Participação', descricao: aboutPensu, img: 'pp', atribuicao: 'PESNU UFF', color: 'primary' })
   }
 }
 </script>
