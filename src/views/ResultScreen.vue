@@ -113,9 +113,7 @@ export default {
     let estresse;
     try {
       const scores = this.$route.params.scores;
-      console.log("scores", scores);
       estresse = scores.sqr20 || scores.trabalho || scores.esgotamento;
-      console.log("score.srq20", scores.sqr20);
       this.verificaEstresse(estresse);
     } catch (e) {
       estresse = this.$cookies.get("estressado");

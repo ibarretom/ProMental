@@ -12,7 +12,6 @@
 }
 </style>
 <script>
-import { GoogleAuthProvider } from "firebase/auth";
 export default {
   name: "App",
 
