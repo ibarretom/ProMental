@@ -1,11 +1,26 @@
 <template>
-  <v-progress-linear :active="activeBar" :background-opacity="opacity" :bottom="bottom" :buffer-value="buffer" :height="height" :indeterminate="indeterminate" :query="query" :rounded="rounded" :stream="stream" :striped="striped" :top="top" :value="progressValue" color="primary" class="rounded-xl">
+  <v-progress-linear
+    :active="activeBar"
+    :background-opacity="opacity"
+    :bottom="bottom"
+    :buffer-value="buffer"
+    :height="height"
+    :indeterminate="indeterminate"
+    :query="query"
+    :rounded="rounded"
+    :stream="stream"
+    :striped="striped"
+    :top="top"
+    :value="progressValue"
+    color="primary"
+    class="rounded-xl"
+  >
     <strong class="white--text">{{ progressValue }}%</strong>
   </v-progress-linear>
 </template>
 <script>
 export default {
-  props: ['progressValue', 'activeBar'],
+  props: ["progressValue", "activeBar"],
   data: () => ({
     absolute: false,
     active: true,
@@ -21,20 +36,17 @@ export default {
     striped: false,
     top: false,
     value: 25,
-    progressNum: localStorage.getItem('pP')
   }),
   methods: {
-    addProgress () {
+    addProgress() {
       if (this.value === 100) {
-        this.value = 0
+        this.value = 0;
       } else {
-        console.log(this.value)
-        this.value += 5
-        console.log(this.value)
+        this.value += 5;
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped></style>

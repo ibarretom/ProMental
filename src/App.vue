@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-main>
-      <load :show='true' />
+      <load :show="true" />
       <router-view></router-view>
     </v-main>
   </v-app>
@@ -12,17 +12,16 @@
 }
 </style>
 <script>
+import { GoogleAuthProvider } from "firebase/auth";
 export default {
-  name: 'App',
+  name: "App",
 
   data: () => ({
     //
   }),
-  created () {
-    console.log('criado')
-    this.$root.$emit('spinner::show')
+  created() {
+    this.$root.$emit("spinner::show");
   }
-}
+};
 </script>
-<style>
-</style>
+<style></style>

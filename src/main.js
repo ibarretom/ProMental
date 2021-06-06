@@ -6,6 +6,9 @@ import vuetify from '@/plugins/vuetify'
 import firebase from '@/plugins/firebase'
 import loadComponet from '@/components/LoadScreen.vue'
 import cookies from 'vue-cookies'
+import {firestorePlugin} from 'vuefire';
+
+Vue.use (firestorePlugin);
 
 Vue.use(cookies)
 Vue.$cookies.config('5h')

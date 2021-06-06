@@ -17,21 +17,25 @@ const routes = [
     redirect: '/home'
   },
   {
-    path: '/ds', /* dados iniciais */
+    path: '/cadastro', /* dados iniciais */
     name: 'FormScreenData',
     component: () =>
       import(/* webpackChunkName: "formScreenData" */ '../views/FormScreenData')
   },
   {
-    path: '/qs', /* quiz screen */
+    path: '/questionario', /* quiz screen */
     name: 'QuizScreen',
     component: () =>
       import(/* webpackChunkName: "quizScreen" */ '../views/QuizScreen')
   },
   {
-    path: '/rs', /* quiz screen */
+    path: '/resultado', /* quiz screen */
     name: 'ResultScreen',
     component: ResultScreen
+  },
+  {
+    path: "*",
+    redirect: "/"
   }
 ]
 
