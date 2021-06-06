@@ -1,6 +1,6 @@
 <template>
-  <v-container fill-height fluid primary>
-    <v-row class="justify-center mx-auto white--text flex-row-reverse">
+  <v-container class="justify-center" fluid fill-height primary>
+    <v-row class="justify-center white--text flex-row-reverse">
       <v-col class="border col-8 col-sm-4">
         <v-img
           contain
@@ -11,30 +11,22 @@
         />
       </v-col>
 
-      <v-col id="textoAqui" class="mx-4 mt-auto col-12 col-md-6">
+      <v-col class="mx-4 mt-auto col-12 col-md-6">
         <p
-          id="titulo"
           v-html="bemVindo.titulo"
-          class="border mb-md-10 text-h5 text-sm-h3 text-md-h3 font-weight-bold"
-          style="text-align: center"
+          class="border mb-md-10 text-h5 text-sm-h3 text-center text-md-h3 font-weight-bold"
         ></p>
         <p
-          id="texto"
           v-html="bemVindo.texto"
-          class="border mx-2 text-body-1 text-sm-h5 font-weight-regular"
-          style="text-align: center"
+          class="border mb-8 text-body-1 text-center text-sm-h5 font-weight-regular"
         ></p>
-      </v-col>
-    </v-row>
-    <v-row class="justify-center">
-      <v-col class="border mx-4 mb-2 col-12 col-md-6 ma-auto text-center">
         <v-btn
           dark
           block
           x-large
           outlined
           rounded
-          class="button"
+          class="text-center"
           router
           to="/cadastro"
         >
@@ -42,6 +34,9 @@
         </v-btn>
       </v-col>
     </v-row>
+    <!-- <v-row class="justify-center align-center">
+      <v-col class="col-12 col-md-6"> </v-col>
+    </v-row> -->
   </v-container>
 </template>
 
@@ -63,8 +58,12 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-* {
-  box-sizing: border-box;
+<style>
+.container.fill-height > .row {
+  flex: 1 1 100%;
+  max-width: 100%;
+}
+.v-btn {
+  text-transform: none;
 }
 </style>

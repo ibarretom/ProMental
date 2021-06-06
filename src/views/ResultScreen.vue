@@ -166,4 +166,7 @@ export default {
   background-color: #eeeeee;
   border-radius: 30px;
 }
+::v-deep .v-btn {
+  text-transform: uppercase;
+}
 </style>

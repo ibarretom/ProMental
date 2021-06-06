@@ -36,7 +36,7 @@ let questionario = [
     scoreCorte: 7,
     tamanho: 20,
     msgTransicao: 'Vamos falar um pouco sobre a sua rotina, ok?',
-    respostas: ['nao', 'sim'],
+    respostas: ['Não', 'Sim'],
     perguntas: ['Sente-se nervoso(a), tenso(a) ou preocupado(a)?', 'Assusta-se com facilidade?', 'Tem se sentido triste ultimamente?',
       'Tem chorado mais do que de costume?', 'Tem dores de cabeça frequentes?', 'Dorme mal?', "Tem sensações desagradáveis no estômago?",
       'Tem má-digestão?', 'Tem falta de apetite?', 'Tem tremores nas mãos?', 'Cansa-se com facilidade?', 'Tem dificuldade em tomar decisões?',
@@ -49,7 +49,7 @@ let questionario = [
     scoreCorte: 4,
     tamanho: 6,
     msgTransicao: 'Vamos falar sobre a dinâmica do seu trabalho, ok?',
-    respostas: ['não', 'sim'],
+    respostas: ['Não', 'Sim'],
     perguntas: [
       'Você acha que tem de fazer suas tarefas de trabalho com muita rapidez?', 'Você acha que tem de  produzir muito, em pouco tempo?',
       'Você acha que seu trabalho exige demais de você?', 'Você tem pouco tempo para cumprir todas as tarefas? ',
@@ -62,7 +62,7 @@ let questionario = [
     scoreCorte: 4,
     tamanho: 5,
     msgTransicao: 'Vamos falar sobre a dinâmica do seu trabalho, ok?',
-    respostas: ['sim', 'nao'],
+    respostas: ['Sim', 'Não'],
     perguntas: [
       'Você tem possibilidade de aprender coisas novas em seu trabalho?', 'Seu trabalho exige muita habilidade ou conhecimentos especializados?',
       'Seu trabalho exige que você tome iniciativas?', 'Você pode escolher COMO fazer o seu trabalho? ',

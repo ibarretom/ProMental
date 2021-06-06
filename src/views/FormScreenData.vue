@@ -47,7 +47,10 @@
             ></v-radio>
           </v-radio-group>
         </div>
-        <div class="opcoes-estado" v-if="steps[answareIndex] === 'municipio'">
+        <div
+          class="opcoes-estado mx-5"
+          v-if="steps[answareIndex] === 'municipio'"
+        >
           <v-select
             :items="listaEstados"
             v-model="estado"
@@ -66,7 +69,7 @@
         </div>
         <v-form
           ref="ageForm"
-          class="idade"
+          class="idade mx-5"
           v-if="steps[answareIndex] === 'age'"
           v-on:submit.prevent="confirmar(steps[answareIndex])"
         >
@@ -85,21 +88,18 @@
       </section>
     </div>
     <div class="down">
-      <section class="botao-confirmar d-flex justify-center">
-        <div class="content-button">
-          <v-btn
-            v-if="ageField || municipio || radio || cardSelection"
-            @click="confirmar(steps[answareIndex])"
-            color="primary"
-            confirma
-            rounded
-            large
-            block
-            dark
-          >
-            confirmar
-          </v-btn>
-        </div>
+      <section class="botao-confirmar mb-4 d-flex justify-center">
+        <v-btn
+          v-if="ageField || municipio || radio || cardSelection"
+          @click="confirmar(steps[answareIndex])"
+          color="primary"
+          width="260px"
+          rounded
+          large
+          dark
+        >
+          Confirmar
+        </v-btn>
       </section>
     </div>
   </v-container>
@@ -109,7 +109,6 @@
 import CardItemGender from "@/components/CardItemGender.vue";
 import ToolBar from "@/components/ToolBar";
 import Message from "@/components/Message";
-import db from "@/data_center/questions.js";
 import axios from "axios";
 
 export default {
