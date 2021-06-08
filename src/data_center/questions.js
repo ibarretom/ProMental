@@ -51,7 +51,7 @@ let questionario = [
     msgTransicao: 'Vamos falar sobre a dinâmica do seu trabalho, ok?',
     respostas: ['Não', 'Sim'],
     perguntas: [
-      'Você acha que tem de fazer suas tarefas de trabalho com muita rapidez?', 'Você acha que tem de  produzir muito, em pouco tempo?',
+      'Você acha que tem de fazer suas tarefas de trabalho com muita rapidez?', 'Você acha que tem que fazer muitas coisas para o trabalho, em pouco tempo?',
       'Você acha que seu trabalho exige demais de você?', 'Você tem pouco tempo para cumprir todas as tarefas? ',
       'O seu trabalho costuma apresentar exigências contraditórias ou discordantes?', 'No seu trabalho, você tem que repetir muitas vezes as mesmas tarefas? ',
       'fim'

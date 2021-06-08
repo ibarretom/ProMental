@@ -10,7 +10,11 @@
         contain
         :src="require(`@/assets/dicas/${exibicao.img}.svg`)"
       ></v-img>
-      <h2 :class="`text-center ${exibicao.color}  mt-2 rounded-lg white--text`">
+      <h2
+        :class="
+          `text-center ${exibicao.color}  mt-2 rounded-lg white--text pa-2`
+        "
+      >
         {{ exibicao.titulo }}
       </h2>
       <article class="mt-4" v-html="exibicao.descricao"></article>
@@ -49,7 +53,7 @@ export default {
   }),
   watch: {
     exibicao(atual, antiga) {
-      if (atual.titulo === "Agradecemos sua Participação") {
+      if (atual.titulo === "Agradecemos sua participação!") {
         this.opcoesExibidas = this.encerrar;
         this.indexDicas = 0;
       }
@@ -81,9 +85,9 @@ export default {
           "encerrar"
         ];
         this.exibicao = {
-          titulo: "Você parece um pouco estressado(a)",
+          titulo: "Você parece um pouco estressado(a)!",
           descricao:
-            "Vamos te dar umas dicas de saúde e bem estar ok? <br> Não se esqueça de consultar as unidades de saúde, caso precise.",
+            "Vamos fornecer algumas dicas de saúde e bem-estar, ok?! <br> Não se esqueça de consultar as unidades de saúde, caso precise.",
           color: "error",
           img: "estresse",
           atribuicao: "freepik"
@@ -134,7 +138,7 @@ export default {
     <br/><br/> <a href="https://www.facebook.com/pg/EspacoAbertoParaSaude"><strong style="color: #3b5998";> <i class="fab fa-facebook"></i> Facebook:</strong> <i>@EspacoAbertoParaSaude</i></a>
     <br/><br/> <a href="https://www.instagram.com/espacoabertosaudeuff/"><strong style="color: #3f729b";> <i class="fab fa-instagram"></i> Instagram:</strong> <i>@espacoabertosaudeuff</i></a>`;
     this.dicas.push({
-      titulo: "Agradecemos sua Participação",
+      titulo: "Agradecemos sua participação!",
       descricao: aboutPensu,
       img: "pp",
       atribuicao: "PESNU UFF",

@@ -230,12 +230,10 @@ export default {
       });
     },
     async registraUsuario(user) {
-      console.log(localStorage.getItem("respondeu"));
       if (!localStorage.getItem("respondeu")) {
         await db.logarEescrever(user);
         localStorage.setItem("respondeu", "true");
       } else {
-        console.log("else ja respondeu");
       }
     },
     async analisaScore(user) {
@@ -302,9 +300,7 @@ export default {
             this.tempScore = this.user.score[this.questionarioAtual.tipo];
           }
         }
-      } catch (e) {
-        console.log(e);
-      }
+      } catch (e) {}
     } finally {
       this.definirAdicaoDeProgresso(this?.user?.trabalhando);
     }

@@ -133,7 +133,7 @@ export default {
       answareIndex: 0,
 
       botQuestion:
-        "Olá seja bem vindo ao questionário, antes de começar, que tal contar um pouco sobre você?",
+        "Olá seja bem-vindo ao questionário, antes de começar, que tal contar um pouco sobre você? <br> OBS: os dados fornecidos por você são apenas para uma avaliação global de sua saúde, são anônimos e sigilosos. Ou seja, não sabemos quem é você.",
       userAnsware: ["Eu sou", "Eu sou do", "No momento eu", "Eu Tenho"],
 
       ageRule: [
@@ -199,7 +199,7 @@ export default {
         this.answareIndex++;
       }
       if (step === this.steps[0]) {
-        this.user.gender = this.cardSelection === 2 ? "female" : "male";
+        this.user.gender = this.cardSelection === 2 ? "Mulher" : "Homem";
         this.cardSelection = 0;
       } else if (step === this.steps[1]) {
         this.user.localizacao.estado = this.estado;
@@ -232,8 +232,7 @@ export default {
     });
     this.listaEstados.sort();
     this.$root.$emit("spinner::hide");
-    // db.questionario = await db.colecao("questionario");
-    // db.questionario_ordem = await db.colecao("questionario-ordem");
+    localStorage.removeItem("user_progress");
   }
 };
 </script>
