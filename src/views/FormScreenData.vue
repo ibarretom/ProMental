@@ -9,6 +9,7 @@
       color="white"
       icon="mdi-arrow-left"
     />
+    <DialogConcentimentoDeDados />
     <div class="up d-flex flex-column">
       <section class="pergunta d-flex pt-4 px-4">
         <Message :botQuestion="botQuestion" />
@@ -107,12 +108,13 @@
 
 <script>
 import CardItemGender from "@/components/CardItemGender.vue";
+import DialogConcentimentoDeDados from "@/components/DialogConcentimentoDeDados.vue";
 import ToolBar from "@/components/ToolBar";
 import Message from "@/components/Message";
 import axios from "axios";
 
 export default {
-  components: { ToolBar, CardItemGender, Message /* ,TextAnsware, */ },
+  components: { ToolBar, CardItemGender, Message, DialogConcentimentoDeDados },
   data: () => {
     return {
       cardSelection: null,
@@ -133,7 +135,7 @@ export default {
       answareIndex: 0,
 
       botQuestion:
-        "Olá seja bem-vindo ao questionário, antes de começar, que tal contar um pouco sobre você? <br> OBS: os dados fornecidos por você são apenas para uma avaliação global de sua saúde, são anônimos e sigilosos. Ou seja, não sabemos quem é você.",
+        "Olá seja bem-vindo ao questionário, antes de começar, que tal contar um pouco sobre você?",
       userAnsware: ["Eu sou", "Eu sou do", "No momento eu", "Eu Tenho"],
 
       ageRule: [
